@@ -13,4 +13,4 @@ TSX, Material UI
 1. Navigate to chrome://extensions/
 2. Ensure developer mode on top right corner is toggled
 3. Click 'load unpacked'
-4. Select dist/ folder in chrome extension directory
+4. Select dist/ folder in chrome extension directory# ingredient-checker-extension
