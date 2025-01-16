@@ -74,6 +74,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "webpack --config webpack.config.js",
+        "watch": "cross-env webpack --watch",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

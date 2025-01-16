@@ -41,7 +41,10 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "manifest.json", to: "../manifest.json" },
+        {
+          from: "manifest.json",
+          to: path.join(__dirname, "dist", "manifest.json"),
+        },
       ],
     }),
     new webpack.DefinePlugin({

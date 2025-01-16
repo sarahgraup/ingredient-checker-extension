@@ -6,7 +6,8 @@
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self';"
   },
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "js/index.html",
     "default_title": "Ingredients"

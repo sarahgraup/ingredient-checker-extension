@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid, Box, Button } from '@mui/material';
+import { findIngredients } from 'utils/ingredients';
 
 /**
  * click check ingreidnet send message to content script
@@ -7,16 +8,44 @@ import { Grid, Box, Button } from '@mui/material';
  * 
  */
 export default function Popup() {
+  
   const analyze = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabToScrape) => {
-      if (tabToScrape && tabToScrape.length > 0 && tabToScrape[0] && tabToScrape[0].id) {
-        chrome.tabs.sendMessage(tabToScrape[0].id!, { type: 'scrapeHtml' }, (response) => {
-          console.log("response", response);
-        })
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const currentTab = tabs[0];
+      if (!currentTab?.id) {
+        console.error("No active tab found");
+        return;
       }
+      console.log("Sending message to tab:", currentTab.id);
+      //dynamically injects content script
+      chrome.scripting.executeScript({
+        target: { tabId: currentTab.id },
+        files:["js/contentScript.js"],
+      },
+        () => {
+           if (chrome.runtime.lastError) {
+             console.error("Runtime error:", chrome.runtime.lastError);
+             return;
+           }
+          console.log("content script injected. sending message");
+          chrome.tabs.sendMessage(
+            currentTab.id!,
+            { type: "scrapeHtml" },
+            (response) => {
+              if (chrome.runtime.lastError) {
+                console.error("Runtime error:", chrome.runtime.lastError);
+                return;
+              }
+              console.log("Received response:", response);
+              findIngredients(response.ingredients);
+            }
+          );
+
+        
+      })
+      
     });
-      chrome.runtime.sendMessage({ action: 'analyze' });
-    };
+  };
 
     return (
 
