@@ -47,7 +47,14 @@ export default function Popup() {
               console.log('Received response:', response);
               if (response.success) {
                 const foundIngredients = findIngredients(response.ingredients);
-                setIngredients(foundIngredients);
+                console.log("found", foundIngredients)
+                if (foundIngredients.length>0) {
+                   setIngredients(foundIngredients);
+                  
+                } else {
+                  setIngredients(['no ingredients found']);
+                }
+               
                 setIsLoading(false);
                 
               } else {
@@ -94,7 +101,7 @@ export default function Popup() {
         <Button color="primary" variant="contained" onClick={analyze}>
           Check Ingredients
         </Button>
-        {ingredients && (
+        {!isLoading && ingredients && (
           <Results ingredients={ingredients}/>
         )}
       </Grid>
