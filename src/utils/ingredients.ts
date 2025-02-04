@@ -133,7 +133,6 @@ export const nameMappings: { [key: string]: string } = {
   'pg monostearate': 'propylene glycol monostearate',
   
   // Alternative names for dioctyl succinate
-  'dos': 'dioctyl succinate',
   'bis(2-ethylhexyl) succinate': 'dioctyl succinate',
   
   // Alternative names for glyceryl stearate SE
@@ -202,7 +201,9 @@ export const findIngredients = (ingredientHtml: string): string[] => {
 
   const matchedIngredients = new Set<string>();
 
+
   for (const ingredient of ingredientsList) {
+    // console.log("ingredient", ingredient);
     // 1. Check direct matches first (most efficient)
     if (comedogenicIngredients.has(ingredient)) {
       matchedIngredients.add(ingredient);
@@ -211,6 +212,7 @@ export const findIngredients = (ingredientHtml: string): string[] => {
 
     // 2. Check if this ingredient is a known variant name
     if (nameMappings[ingredient]) {
+      // console.log("name mappings at ingredient", nameMappings[ingredient]);
       matchedIngredients.add(nameMappings[ingredient]);
       continue;
     }
@@ -219,22 +221,25 @@ export const findIngredients = (ingredientHtml: string): string[] => {
     // This is the most expensive operation, so we do it last
     for (const [variant, standardName] of Object.entries(nameMappings)) {
       const variantLower = variant.toLowerCase();
-      if (
-        ingredient.includes(variantLower) ||
-        variantLower.includes(ingredient)
+          
+      if (ingredient.length>1 &&(
+        ingredient.includes(variantLower)  )
       ) {
-        matchedIngredients.add(standardName);
+           console.log("variant", variant, standardName, ingredient);
+ 
+        matchedIngredients.add(variant);
         break;
       }
     }
   }
+
 
   console.log('matched');
   console.log(matchedIngredients);
   return Array.from(matchedIngredients);
 };
 
-// Optional: Add a type for the name mappings
+
 export interface IngredientMappings {
   [key: string]: string;
 }
